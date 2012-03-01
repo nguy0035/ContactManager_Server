@@ -12,6 +12,7 @@ import java.io.BufferedInputStream;
 import java.net.Socket;
 import java.io.DataInputStream;
 import java.io.BufferedInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,19 +20,29 @@ import util.db_helper;
 
 public class client implements Runnable{
 
+    private Server server ; 
     private Socket socket;
     private String username;// a unique username
     private String password;
     private DataInputStream inputstream;
+    private DataOutputStream outputstream;
     private Thread thread;
     
     private String RFC; // a command message sent by a CLIENT
-    private final String HELLO_RFC = "HELLO"; // RFC = HELLO username password
     
-    public client(Socket socket){
+    /*************RFC Constants****************************/
+    private final String HELLO_RFC = "HELLO"; // RFC = HELLO username password
+    private final String HELLO_RESPONSE_ACCEPT = "ACCEPT HELLO";//RFC = ACCEPT HELLO
+    private final String HELLO_RESPONSE_REJECT = "REJECT HELLO";
+    /************End of RFC Constants********************/
+    
+    public client(Server server,Socket socket){
+        this.server = server;
         this.socket = socket;
         try {
             inputstream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+            outputstream = new DataOutputStream(socket.getOutputStream());
+            
         } catch (IOException ex) {
             Logger.getLogger(client.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -82,12 +93,26 @@ public class client implements Runnable{
             if (RFC.startsWith(HELLO_RFC))
             {
                 boolean loginSuccess = DoLogin(RFC);
-                if (!loginSuccess)
+                if (!loginSuccess){
+                    SendLoginMessageResponse(HELLO_RESPONSE_REJECT);
                     StopClient();
+                }
+                else
+                {
+                    SendLoginMessageResponse(HELLO_RESPONSE_ACCEPT);
+                    this.server.addNewActiveClient(this);
+                }
             }
         }
     }
     
+    private void SendLoginMessageResponse(String RFC_response){
+        try {
+            outputstream.write(RFC_response.getBytes());
+        } catch (IOException ex) {
+            Logger.getLogger(client.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     private void StopClient(){
         
         this.thread = null;

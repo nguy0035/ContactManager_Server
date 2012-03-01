@@ -23,7 +23,7 @@ public class Server implements Runnable{
     
     private int LISTENED_PORT = 5555;
     
-    private ArrayList<client> active_users = new ArrayList<client>();
+    private ArrayList<client> active_clients = new ArrayList<client>();
     
     public Server(){
         try
@@ -36,13 +36,17 @@ public class Server implements Runnable{
         
         
     }
+    public void addNewActiveClient(client new_active_client){
+        active_clients.add(new_active_client);
+    }
+    
     @Override
     public void run() {
         
         while (SERVER_STATE==SERVER_STATE_RUNNING){
             try{
                 socket = serverSocket.accept();
-                client authenticating_client = new client(socket);
+                client authenticating_client = new client(this,socket);
             }
             catch(IOException e){
                 

@@ -1,0 +1,7 @@
+Below is the description for the RFC command for server
+
+1/RFC = HELLO username password
+
+Initially, a client will send a HELLO message with its username and password to authenticate with a SERVER
+
+2/RFC = ACCEPT HELLO

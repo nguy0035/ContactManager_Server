@@ -8,6 +8,7 @@ package GUI;
  *
  * @author tatthang
  */
+import javax.swing.JOptionPane;
 public class LoginForm extends javax.swing.JFrame {
 
     /**
@@ -126,6 +127,7 @@ public class LoginForm extends javax.swing.JFrame {
         }
         else
         {
+            JOptionPane.showMessageDialog(this, "Wrong authentication");
             return;
         }
     }//GEN-LAST:event_login_BtnActionPerformed
