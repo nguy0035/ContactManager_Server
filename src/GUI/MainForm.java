@@ -8,6 +8,7 @@ package GUI;
  *
  * @author tatthang
  */
+import entity.Server;
 public class MainForm extends javax.swing.JFrame {
 
     /**
@@ -15,6 +16,9 @@ public class MainForm extends javax.swing.JFrame {
      */
     public MainForm() {
         initComponents();
+        Thread server = new Thread(new Server());
+        server.start();
+        
     }
 
     /**

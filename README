@@ -1,0 +1,3 @@
+An interface for server written in Java. It will be placed in the Application Server and communicate with DB server and client
+
+1/ There will be a main thread and all other 
