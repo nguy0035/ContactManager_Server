@@ -23,7 +23,7 @@ public class Server implements Runnable{
     
     private int LISTENED_PORT = 5555;
     
-    private ArrayList<client> userList = new ArrayList<client>();
+    private ArrayList<client> active_users = new ArrayList<client>();
     
     public Server(){
         try
@@ -42,7 +42,7 @@ public class Server implements Runnable{
         while (SERVER_STATE==SERVER_STATE_RUNNING){
             try{
                 socket = serverSocket.accept();
-                
+                client authenticating_client = new client(socket);
             }
             catch(IOException e){
                 
